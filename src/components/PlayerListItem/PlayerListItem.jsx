@@ -6,7 +6,7 @@ export default function PlayerListItem({ initialName, symbol }) {
 
     let editiablePlayerName = <span className="player-name">{playerName}</span>
     if (isEditing) {
-        editiablePlayerName = <input type="text" value={playerName} onChange={handlePlayerNameChange}></input>
+        editiablePlayerName = <input type="text" required value={playerName} onChange={handlePlayerNameChange}></input>
     }
 
     function handlePlayerNameChange(event) {
