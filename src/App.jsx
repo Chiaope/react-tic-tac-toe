@@ -1,6 +1,7 @@
 import { useState } from "react"
 import GameBoard from "./components/GameBoard/GameBoard"
 import PlayerListItem from "./components/PlayerListItem/PlayerListItem"
+import GameLogs from "./components/GameLogs/GameLogs"
 
 
 let player1Symbol = 'X'
@@ -37,7 +38,7 @@ function App() {
         </ol>
         <GameBoard turns={gameTurns} onSelect={handleOnSelect} />
       </div>
-      LOG
+      <GameLogs turns={gameTurns}/>
     </main>
   )
 }
