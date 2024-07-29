@@ -4,7 +4,7 @@ import PlayerListItem from "./components/PlayerListItem/PlayerListItem"
 
 
 let player1Symbol = 'X'
-let player2Symbol = 'O'
+let player2Symbol = 'Y'
 
 function derivePlayer(gameTurns) {
   let player = player1Symbol
@@ -22,8 +22,6 @@ function App() {
   function handleOnSelect(rowIndex, colIndex) {
     setGameTurns((prevGameTurns) => {
       const currentPlayer = derivePlayer(prevGameTurns)
-      console.log('current player')
-      console.log(currentPlayer)
       const updatedTurns = [{ square: { row: rowIndex, col: colIndex }, player: currentPlayer }, ...prevGameTurns]
 
       return updatedTurns
@@ -33,9 +31,9 @@ function App() {
   return (
     <main>
       <div id='game-container'>
-        <ol id='players'>
-          <PlayerListItem initialName={'Player 1'} symbol={player1Symbol} />
-          <PlayerListItem initialName={'Player 2'} symbol={player2Symbol} />
+        <ol id='players' className="highlight-player">
+          <PlayerListItem initialName={'Player 1'} symbol={player1Symbol} active={activePlayer === player1Symbol} />
+          <PlayerListItem initialName={'Player 2'} symbol={player2Symbol} active={activePlayer === player2Symbol} />
         </ol>
         <GameBoard turns={gameTurns} onSelect={handleOnSelect} />
       </div>

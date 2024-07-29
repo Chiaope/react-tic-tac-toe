@@ -7,12 +7,10 @@ let initialGameBoard = [
 export default function GameBoard({ turns, onSelect }) {
     let gameBoard = initialGameBoard
     for (const turn of turns) {
-        console.log(turn)
         const { square, player } = turn
         const { row, col } = square
         gameBoard[row][col] = player
     }
-    console.log(gameBoard)
 
     return (
         <ol id='game-board'>
