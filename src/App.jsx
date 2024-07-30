@@ -6,60 +6,63 @@ import { WINNING_COMBINATIONS } from "./winning-condition"
 import GameOver from "./components/GameOver/GameOver"
 
 
-let player1Symbol = 'X'
-let player2Symbol = 'O'
+const PLAYER_SYMBOL_1 = 'X'
+const DEFAULT_PLAYER_NAME_1 = 'Player 1'
+const PLAYER_SYMBOL_2 = 'O'
+const DEFAULT_PLAYER_NAME_2 = 'Player 2'
 
-let initialGameBoard = [
+const INITIAL_GAME_BOARD = [
   [null, null, null],
   [null, null, null],
   [null, null, null]
 ]
 
 function derivePlayer(gameTurns) {
-  let player = player1Symbol
-  if (gameTurns.length > 0 && gameTurns[0].player === player1Symbol) {
-    player = player2Symbol
+  let player = PLAYER_SYMBOL_1
+  if (gameTurns.length > 0 && gameTurns[0].player === PLAYER_SYMBOL_1) {
+    player = PLAYER_SYMBOL_2
   }
   return player
 }
 
-function App() {
-  const [player, setPlayer] = useState({
-    [player1Symbol]: 'Player 1',
-    [player2Symbol]: 'Player 2'
-  })
-  const [gameTurns, setGameTurns] = useState([])
-
-  let winner = null
-  let draw = false
-  let activePlayer = derivePlayer(gameTurns)
-
-  if (gameTurns.length >= 9) {
-    draw = true
+function deriveWinner(gameBoard, player) {
+  for (const winning_combination of WINNING_COMBINATIONS) {
+    let currSymbols = [null, null, null]
+    for (const i in winning_combination) {
+      const { row, column } = winning_combination[i]
+      currSymbols[i] = gameBoard[row][column]
+    }
+    if (currSymbols.every(function (v) { return v === currSymbols[0]; })) {
+      return player[currSymbols[0]]
+    }
   }
+  return null
+}
 
-  let gameBoard = JSON.parse(JSON.stringify(initialGameBoard))
+function deriveGameBoard(gameTurns) {
+  let gameBoard = JSON.parse(JSON.stringify(INITIAL_GAME_BOARD))
   for (const turn of gameTurns) {
     const { square, player } = turn
     const { row, col } = square
     gameBoard[row][col] = player
   }
+  return gameBoard
+}
 
-  function checkWinningCondition(gameBoard) {
-    for (const winning_combination of WINNING_COMBINATIONS) {
-      let currSymbols = [null, null, null]
-      for (const i in winning_combination) {
-        const { row, column } = winning_combination[i]
-        currSymbols[i] = gameBoard[row][column]
-      }
-      if (currSymbols.every(function (v) { return v === currSymbols[0]; })) {
-        return player[currSymbols[0]]
-      }
-    }
-    return null
+function App() {
+  const [player, setPlayer] = useState({
+    [PLAYER_SYMBOL_1]: DEFAULT_PLAYER_NAME_1,
+    [PLAYER_SYMBOL_2]: DEFAULT_PLAYER_NAME_2
+  })
+  const [gameTurns, setGameTurns] = useState([])
+
+  let draw = false
+  const gameBoard = deriveGameBoard(gameTurns)
+  const activePlayer = derivePlayer(gameTurns)
+  const winner = deriveWinner(gameBoard, player)
+  if (gameTurns.length >= 9) {
+    draw = true
   }
-
-  winner = checkWinningCondition(gameBoard)
 
   function handleOnNameChange(symbol, newName) {
     setPlayer((prevPlayer) => {
@@ -89,14 +92,14 @@ function App() {
         <ol id='players' className="highlight-player">
           <PlayerListItem
             initialName={'Player 1'}
-            symbol={player1Symbol}
-            active={activePlayer === player1Symbol}
+            symbol={PLAYER_SYMBOL_1}
+            active={activePlayer === PLAYER_SYMBOL_1}
             onNameChange={handleOnNameChange}
           />
           <PlayerListItem
             initialName={'Player 2'}
-            symbol={player2Symbol}
-            active={activePlayer === player2Symbol}
+            symbol={PLAYER_SYMBOL_2}
+            active={activePlayer === PLAYER_SYMBOL_2}
             onNameChange={handleOnNameChange}
           />
         </ol>
