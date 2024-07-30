@@ -4,7 +4,7 @@ export default function GameLogs({ turns }) {
             {turns.map((turn) => {
                 const { square, player } = turn
                 const { row, col } = square
-                return (<li>
+                return (<li key={`${row}-${col}`}>
                     {`${player} - (${row}, ${col})`}
                 </li>)
             })}
