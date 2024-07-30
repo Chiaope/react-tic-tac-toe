@@ -23,24 +23,10 @@ function derivePlayer(gameTurns) {
   return player
 }
 
-function checkWinningCondition(gameBoard) {
-  for (const winning_combination of WINNING_COMBINATIONS) {
-    let currSymbols = [null, null, null]
-    for (const i in winning_combination) {
-      const { row, column } = winning_combination[i]
-      currSymbols[i] = gameBoard[row][column]
-    }
-    if (currSymbols.every(function (v) { return v === currSymbols[0]; })) {
-      return currSymbols[0]
-    }
-  }
-  return null
-}
-
 function App() {
   const [player, setPlayer] = useState({
-    player1Symbol: 'Player 1',
-    player2Symbol: 'Player 2'
+    [player1Symbol]: 'Player 1',
+    [player2Symbol]: 'Player 2'
   })
   const [gameTurns, setGameTurns] = useState([])
 
@@ -59,8 +45,30 @@ function App() {
     gameBoard[row][col] = player
   }
 
+  function checkWinningCondition(gameBoard) {
+    for (const winning_combination of WINNING_COMBINATIONS) {
+      let currSymbols = [null, null, null]
+      for (const i in winning_combination) {
+        const { row, column } = winning_combination[i]
+        currSymbols[i] = gameBoard[row][column]
+      }
+      if (currSymbols.every(function (v) { return v === currSymbols[0]; })) {
+        return player[currSymbols[0]]
+      }
+    }
+    return null
+  }
+
   winner = checkWinningCondition(gameBoard)
-  
+
+  function handleOnNameChange(symbol, newName) {
+    setPlayer((prevPlayer) => {
+      return {
+        ...prevPlayer,
+        [symbol]: newName
+      }
+    })
+  }
 
   function handleOnSelect(rowIndex, colIndex) {
     setGameTurns((prevGameTurns) => {
@@ -79,8 +87,18 @@ function App() {
     <main>
       <div id='game-container'>
         <ol id='players' className="highlight-player">
-          <PlayerListItem initialName={'Player 1'} symbol={player1Symbol} active={activePlayer === player1Symbol} />
-          <PlayerListItem initialName={'Player 2'} symbol={player2Symbol} active={activePlayer === player2Symbol} />
+          <PlayerListItem
+            initialName={'Player 1'}
+            symbol={player1Symbol}
+            active={activePlayer === player1Symbol}
+            onNameChange={handleOnNameChange}
+          />
+          <PlayerListItem
+            initialName={'Player 2'}
+            symbol={player2Symbol}
+            active={activePlayer === player2Symbol}
+            onNameChange={handleOnNameChange}
+          />
         </ol>
         {(winner || draw) && <GameOver winner={winner} onRestart={handleRestart} />}
         <GameBoard gameBoard={gameBoard} onSelect={handleOnSelect} />

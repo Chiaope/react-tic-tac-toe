@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-export default function PlayerListItem({ initialName, symbol, active }) {
+export default function PlayerListItem({ initialName, symbol, active, onNameChange }) {
     const [isEditing, setIsEditing] = useState(false)
     const [playerName, setPlayerName] = useState(initialName)
 
@@ -10,7 +10,9 @@ export default function PlayerListItem({ initialName, symbol, active }) {
     }
 
     function handlePlayerNameChange(event) {
-        setPlayerName(event.target.value)
+        const newName = event.target.value
+        setPlayerName(newName)
+        onNameChange(symbol, newName)
     }
 
     function handleEdit() {
